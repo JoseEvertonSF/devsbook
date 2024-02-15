@@ -2,19 +2,30 @@
 namespace src\controllers;
 
 use \core\Controller;
-
+use \src\handlers\UserHandler;
+use \src\handlers\PostHandler;
 class HomeController extends Controller {
+    private $usuarioLogado;
+    public function __construct(){
+        $this->usuarioLogado = UserHandler::checkLogin();
+        if($this->usuarioLogado == false){
+            $this->redirect('/login');
+        }
 
-    public function index() {
-        $this->render('home', ['nome' => 'Bonieky']);
+    }
+    public function index(){
+        $page = intval(filter_input(INPUT_GET, 'page'));
+        
+        $feed = PostHandler::getHomeFeed(
+            $this->usuarioLogado->id,
+            $page
+        );
+        
+        $this->render('home', [
+            'usuario' => $this->usuarioLogado,
+            'feed' => $feed
+        ]);
     }
 
-    public function sobre() {
-        $this->render('sobre');
-    }
-
-    public function sobreP($args) {
-        print_r($args);
-    }
 
 }

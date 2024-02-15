@@ -1,3 +1,3 @@
-<?php $render('header'); ?>
+<?= $render('header'); ?>
 
 <h4>Sobre</h4>
